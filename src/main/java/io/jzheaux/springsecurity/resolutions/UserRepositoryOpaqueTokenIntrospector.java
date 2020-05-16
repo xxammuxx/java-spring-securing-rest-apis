@@ -3,11 +3,11 @@ package io.jzheaux.springsecurity.resolutions;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.oauth2.core.DefaultOAuth2AuthenticatedPrincipal;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class UserRepositoryOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
@@ -35,6 +35,33 @@ public class UserRepositoryOpaqueTokenIntrospector implements OpaqueTokenIntrosp
 				authorities.contains(new SimpleGrantedAuthority("resolution:write"))) {
 			authorities.add(new SimpleGrantedAuthority("resolution:share"));
 		}
-		return new DefaultOAuth2AuthenticatedPrincipal(principal.getAttributes(), authorities);
+		return new UserOAuth2AuthenticatedPrincipal(user, principal.getAttributes(), authorities);
+	}
+
+	private static class UserOAuth2AuthenticatedPrincipal extends User implements OAuth2AuthenticatedPrincipal {
+		private Map<String, Object> attributes;
+		private Collection<GrantedAuthority> authorities;
+
+		public UserOAuth2AuthenticatedPrincipal(
+				User user, Map<String, Object> attributes, Collection<GrantedAuthority> authorities) {
+			super(user);
+			this.attributes = attributes;
+			this.authorities = authorities;
+		}
+
+		@Override
+		public Map<String, Object> getAttributes() {
+			return this.attributes;
+		}
+
+		@Override
+		public Collection<? extends GrantedAuthority> getAuthorities() {
+			return this.authorities;
+		}
+
+		@Override
+		public String getName() {
+			return this.username;
+		}
 	}
 }
