@@ -27,6 +27,14 @@ public class UserRepositoryOpaqueTokenIntrospector implements OpaqueTokenIntrosp
 		Collection<GrantedAuthority> authorities = principal.getAuthorities().stream()
 				.map(authority -> new SimpleGrantedAuthority(authority.getAuthority().substring(6)))
 				.collect(Collectors.toList());
+		Collection<GrantedAuthority> userAuthorities = user.getUserAuthorities().stream()
+				.map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
+				.collect(Collectors.toList());
+		authorities.retainAll(userAuthorities);
+		if ("premium".equals(user.getSubscription()) &&
+				authorities.contains(new SimpleGrantedAuthority("resolution:write"))) {
+			authorities.add(new SimpleGrantedAuthority("resolution:share"));
+		}
 		return new DefaultOAuth2AuthenticatedPrincipal(principal.getAttributes(), authorities);
 	}
 }
