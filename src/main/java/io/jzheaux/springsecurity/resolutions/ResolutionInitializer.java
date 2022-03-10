@@ -23,21 +23,29 @@ public class ResolutionInitializer implements SmartInitializingSingleton {
 				"{bcrypt}$2a$10$GN2rFKtvIhkkv4RRqRnOseJ9IxhIU3fiQwGY.nzLCT4.V0rRoKEda");
 		user.grantAuthority("resolution:read");
 		user.grantAuthority("resolution:write");
+		user.grantAuthority("user:read");
+		user.setFullName("User Person");
 		this.users.save(user);
 		User hasread = new User();
+		user.setFullName("HasRead Person");
 		hasread.setUsername("hasread");
 		hasread.setPassword("{bcrypt}$2a$10$GN2rFKtvIhkkv4RRqRnOseJ9IxhIU3fiQwGY.nzLCT4.V0rRoKEda");
 		hasread.grantAuthority("resolution:read");
+		user.grantAuthority("user:read");
 		this.users.save(hasread);
 
 		User haswrite = new User();
+		user.setFullName("HasWrite Person");
 		haswrite.setUsername("haswrite");
 		haswrite.setPassword("{bcrypt}$2a$10$GN2rFKtvIhkkv4RRqRnOseJ9IxhIU3fiQwGY.nzLCT4.V0rRoKEda");
 		haswrite.grantAuthority("resolution:write");
+		user.grantAuthority("user:read");
 		this.users.save(haswrite);
 
 		User admin = new User("admin","{bcrypt}$2a$10$hNS8W6kvCNuQWxIUZUUGG.zRTTYdKYdqqzXvCoqjApWVRlj5c0Xke");
 		admin.grantAuthority("ROLE_ADMIN");
+		user.grantAuthority("user:read");
+		user.setFullName("Admin Person");
 		//admin.grantAuthority("resolution:read");
 		//admin.grantAuthority("resolution:write");
 		this.users.save(admin);

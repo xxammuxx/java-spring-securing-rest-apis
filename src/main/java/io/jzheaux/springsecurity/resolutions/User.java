@@ -19,6 +19,9 @@ public class User implements Serializable {
     @Column
     String username;
 
+    @Column(name="full_name")
+    String fullName;
+
     @Column
     String password;
 
@@ -32,6 +35,7 @@ public class User implements Serializable {
         this.password = user.password;
         this.enabled = user.enabled;
         this.userAuthorities = user.userAuthorities;
+        this.fullName = user.fullName;
     }
     public User(String username, String password) {
         this.id = UUID.randomUUID();
@@ -81,5 +85,13 @@ public class User implements Serializable {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
     }
 }
