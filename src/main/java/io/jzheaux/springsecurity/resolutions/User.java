@@ -28,6 +28,12 @@ public class User implements Serializable {
     @Column
     boolean enabled = true;
 
+    @Column
+    String subscription;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    Collection<User> friends = new ArrayList<>();
+
     User() {}
     public User(User user) {
         this.id = user.id;
@@ -36,6 +42,8 @@ public class User implements Serializable {
         this.enabled = user.enabled;
         this.userAuthorities = user.userAuthorities;
         this.fullName = user.fullName;
+        this.subscription = user.subscription;
+        this.friends = user.friends;
     }
     public User(String username, String password) {
         this.id = UUID.randomUUID();
@@ -93,5 +101,19 @@ public class User implements Serializable {
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
+    }
+    public Collection<User> getFriends() {
+        return friends;
+    }
+    public void addFriend(User friend) {
+        friends.add(friend);
+    }
+
+    public String getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(String subscription) {
+        this.subscription = subscription;
     }
 }

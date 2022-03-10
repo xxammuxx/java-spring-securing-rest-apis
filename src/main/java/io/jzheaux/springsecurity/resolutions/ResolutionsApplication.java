@@ -37,8 +37,7 @@ public class ResolutionsApplication extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests(authz -> authz
 			.anyRequest().authenticated())
 				.httpBasic(basic -> {})
-				.oauth2ResourceServer(oauth2 -> oauth2
-						.jwt().jwtAuthenticationConverter(this.authenticationConverter))
+				.oauth2ResourceServer(oauth2 -> oauth2.opaqueToken())
 				.cors(cors -> {});
 	}
 	public static void main(String[] args) {
