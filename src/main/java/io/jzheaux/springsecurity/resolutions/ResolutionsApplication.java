@@ -10,8 +10,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+
 import static org.springframework.http.HttpMethod.GET;
 
 import javax.sql.DataSource;
@@ -28,10 +30,23 @@ public class ResolutionsApplication extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests(authz -> authz
-			.anyRequest().authenticated()).httpBasic(basic -> {});
+			.anyRequest().authenticated()).httpBasic(basic -> {}).cors(cors -> {});
 	}
 	public static void main(String[] args) {
 		SpringApplication.run(ResolutionsApplication.class, args);
 	}
 
+	@Bean
+	WebMvcConfigurer webMvcConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**")
+						// .maxAge(0) // if using local verification
+						.allowedOrigins("http://localhost:4000")
+						.allowedMethods("HEAD")
+						.allowedHeaders("Authorization");
+			}
+		};
+	}
 }
